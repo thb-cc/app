@@ -15,10 +15,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: 'maven'
-      - name: run tests
-        run: mvn clean test
-      - name: package application
-        run: mvn package -DskipTests
+      - name: test and package application
+        run: mvn clean package
       - name: set up docker buildx
         uses: docker/setup-buildx-action@v3
       - name: log into docker hub
@@ -29,5 +27,6 @@ jobs:
       - name: build and push
         uses: docker/build-push-action@v6
         with:
+          context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
