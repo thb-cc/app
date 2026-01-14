@@ -10,9 +10,11 @@ const config: Config = {
     v4: true,
   },
   url: 'https://thb-cc.github.io/',
-  baseUrl: '/',
+  baseUrl: '/app/',
   organizationName: 'thb-cc',
   projectName: 'app',
+  deploymentBranch: 'gh-pages',
+  trailingSlash: false,
   onBrokenLinks: 'throw',
   i18n: {
     defaultLocale: 'en',
