@@ -15,6 +15,10 @@ const config: Config = {
   projectName: 'app',
   deploymentBranch: 'gh-pages',
   trailingSlash: false,
+  markdown: {
+    mermaid: true,
+  },
+  themes: ['@docusaurus/theme-mermaid'],
   onBrokenLinks: 'throw',
   i18n: {
     defaultLocale: 'en',
@@ -26,7 +30,7 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl: 'https://github.com/thb-cc/app/tree/main/website/docs',
+          editUrl: 'https://github.com/thb-cc/app/tree/main/website',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -60,7 +64,7 @@ const config: Config = {
     footer: {
       style: 'dark',
       links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} THB, Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
