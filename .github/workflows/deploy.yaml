@@ -8,7 +8,7 @@ jobs:
   build-push-deploy:
     runs-on: ubuntu-latest
     env:
-      WORKDIR: '/app'
+      WORKDIR: '~/app'
       IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/app
       IMAGE_TAG: ${{ github.sha }}
     steps:
