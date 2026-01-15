@@ -197,6 +197,8 @@ resource "aws_instance" "web" {
               dnf install -y docker
               systemctl enable --now docker
               usermod -aG docker ec2-user
+              sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
+              sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
               EOF
 
   tags = {
@@ -204,7 +206,15 @@ resource "aws_instance" "web" {
   }
 }
 
+resource "aws_eip" "web_eip" {
+  instance = aws_instance.web.id
+  domain   = "vpc"
+}
+
 output "web_public_ip" {
-  description = "Public IP of the Spring Boot Server"
   value       = aws_instance.web.public_ip
+}
+
+output "public_dns" {
+  value = aws_eip.web_eip.public_dns
 }

@@ -8,6 +8,8 @@ target/
 terraform.tfstate
 terraform.tfstate.backup
 
+.ignore/
+
 ### STS ###
 .apt_generated
 .classpath

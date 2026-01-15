@@ -1,0 +1,5 @@
+services:
+  thb-cc-app:
+    container_name: 'thb-cc-app'
+    image: ${IMAGE}
+    ports: ['8080:8080']
