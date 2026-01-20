@@ -1,3 +1,5 @@
+![](https://github.com/thb-cc/app/actions/workflows/deploy.yaml/badge.svg)
+
 # thb-cc/app
 
 `thb-cc/app` is a simple joke application with the sole purpose of displaying computer science memes on demand.
