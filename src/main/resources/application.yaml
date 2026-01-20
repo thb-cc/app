@@ -1,3 +1,7 @@
 spring:
   application:
     name: app
+aws:
+  region: us-east-1
+  s3:
+    bucket-name: testcc-s3-bucket
