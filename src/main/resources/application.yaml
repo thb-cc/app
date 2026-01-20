@@ -4,4 +4,4 @@ spring:
 aws:
   region: us-east-1
   s3:
-    bucket-name: testcc-s3-bucket
+    bucket-name: thb-cc-app-us-east-1
