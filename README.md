@@ -1,4 +1,5 @@
 ![](https://github.com/thb-cc/app/actions/workflows/deploy.yaml/badge.svg)
+![](https://github.com/thb-cc/app/actions/workflows/codeql.yaml/badge.svg)
 
 # thb-cc/app
 
