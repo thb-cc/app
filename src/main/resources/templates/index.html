@@ -89,11 +89,25 @@
         <a class="button" href="/">Neues Bild anzeigen</a>
     </div>
 
+    <div class="quote-box">
+        <p id="quote-text" th:text="${quote}"></p>
+
+        <button onclick="loadNewQuote()">Neuen Spruch laden</button>
+    </div>
     <footer>
-        AWS S3 · Spring Boot · Thymeleaf
+        AWS S3 · Spring Boot · Project Cloud Computing
     </footer>
 
 </div>
+<script>
+    function loadNewQuote() {
+        fetch('/quote')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('quote-text').innerText = text;
+            });
+    }
+</script>
 
 </body>
 </html>
