@@ -108,7 +108,8 @@ resource "aws_vpc_endpoint" "s3" {
   vpc_endpoint_type = "Gateway"
 
   route_table_ids = [
-    aws_route_table.public.id
+    aws_route_table.public.id,
+    aws_route_table.private.id
   ]
 
   tags = {
@@ -192,7 +193,7 @@ resource "aws_instance" "web" {
   }
 
   user_data = <<-EOF
-              #!/bash
+              #!/bin/bash
               dnf update -y
               dnf install -y docker
               systemctl enable --now docker
@@ -209,6 +210,56 @@ resource "aws_instance" "web" {
 resource "aws_eip" "web_eip" {
   instance = aws_instance.web.id
   domain   = "vpc"
+}
+
+resource "aws_dynamodb_table" "quote_table" {
+  name = "quotes"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "id"
+
+  attribute {
+    name = "id"
+    type = "N"
+  }
+}
+
+resource "aws_vpc_endpoint" "dynamodb" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.region}.dynamodb"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = [
+    aws_route_table.public.id,
+    aws_route_table.private.id
+  ]
+
+  tags = {
+    Name = "dynamodb-gateway-endpoint"
+  }
+}
+
+resource "aws_vpc_endpoint_policy" "dynamodb_restrictive" {
+  vpc_endpoint_id = aws_vpc_endpoint.dynamodb.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "AccessFromMainVpcOnly"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "dynamodb:*"
+        Resource  = [
+          aws_dynamodb_table.quote_table.arn,
+          "${aws_dynamodb_table.quote_table.arn}/*"
+        ]
+        Condition = {
+          StringEquals = {
+            "aws:sourceVpc" = aws_vpc.main.id
+          }
+        }
+      }
+    ]
+  })
 }
 
 output "web_public_ip" {
