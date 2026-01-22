@@ -13,7 +13,6 @@ public class AwsConfig {
     public S3Client s3Client() {
         return S3Client.builder()
                 .region(Region.US_EAST_1)
-                .credentialsProvider(AnonymousCredentialsProvider.create())
-                .build(); // Credentials kommen automatisch aus dem Learner Lab
+                .build();
     }
 }
