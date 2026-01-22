@@ -1,5 +1,7 @@
 FROM eclipse-temurin:21-jre-alpine-3.23
 WORKDIR /app
-COPY target/app-*.jar app.jar
+RUN addgroup -S spring && adduser -S spring -G spring
+COPY --chown=spring:spring target/app-*.jar app.jar
+USER spring
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
