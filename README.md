@@ -1,5 +1,6 @@
 ![](https://github.com/thb-cc/app/actions/workflows/deploy.yaml/badge.svg)
 ![](https://github.com/thb-cc/app/actions/workflows/codeql.yaml/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=thb-cc_app&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=thb-cc_app)
 
 # thb-cc/app
 
