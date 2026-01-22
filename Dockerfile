@@ -4,5 +4,5 @@ RUN apk update && apk upgrade --no-cache && \
     addgroup -S spring && adduser -S spring -G spring
 COPY --chown=spring:spring target/app-*.jar app.jar
 USER spring
-EXPOSE 443
+EXPOSE 8443
 ENTRYPOINT ["java", "-jar", "app.jar"]
