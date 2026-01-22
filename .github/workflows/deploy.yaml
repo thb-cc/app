@@ -84,9 +84,10 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cosign verify ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
+            cosign verify ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} \
               --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/deploy.yaml@.*" \
               --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+
             cd ${{ env.WORKDIR }}
-            echo "IMAGE=${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" > .env
+            echo "IMAGE=${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}" > .env
             docker compose up -d --remove-orphans
