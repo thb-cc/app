@@ -38,11 +38,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: build image
-        id: push
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
+          load: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: run trivy scan
@@ -53,6 +52,14 @@ jobs:
           exit-code: 1
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
+
+      - name: push image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: install cosign
         uses: sigstore/cosign-installer@v4.0.0
@@ -78,6 +85,12 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -euo pipefail
+
+            echo "Current User: $(whoami)"
+            echo "Home Variable: $HOME"
+            ls -d $HOME/.sigstore || echo ".sigstore folder not found in $HOME"
+
+            export HOME=/home/${{ secrets.EC2_USER }}
 
             cosign verify ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} \
               --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/deploy.yaml@.*" \
