@@ -36,6 +36,14 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
+data "aws_iam_role" "lab_role" {
+  name = "LabRole"
+}
+
+data "aws_iam_instance_profile" "lab_role" {
+  name = "LabInstanceProfile"
+}
+
 resource "aws_vpc" "main" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
@@ -119,12 +127,19 @@ resource "aws_vpc_endpoint" "s3" {
 
 resource "aws_security_group" "web_sg" {
   name        = "web-server-sg"
-  description = "Allow HTTP only"
+  description = "Allow HTTP/HTTPS and SSH"
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -152,16 +167,18 @@ resource "aws_s3_bucket" "app_bucket" {
   }
 }
 
-resource "aws_s3_bucket_policy" "vpc_only_access" {
+resource "aws_s3_bucket_policy" "app_bucket_policy" {
   bucket = aws_s3_bucket.app_bucket.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AllowVpcAccessOnly"
-        Effect    = "Allow"
-        Principal = "*"
+        Sid    = "AllowLabRoleAccess"
+        Effect = "Allow"
+        Principal = {
+          AWS = data.aws_iam_role.lab_role.arn
+        }
         Action = [
           "s3:GetObject",
           "s3:ListBucket",
@@ -171,11 +188,6 @@ resource "aws_s3_bucket_policy" "vpc_only_access" {
           aws_s3_bucket.app_bucket.arn,
           "${aws_s3_bucket.app_bucket.arn}/*"
         ]
-        Condition = {
-          StringEquals = {
-            "aws:sourceVpc" = aws_vpc.main.id
-          }
-        }
       }
     ]
   })
@@ -186,6 +198,7 @@ resource "aws_instance" "web" {
   instance_type = "t3.micro"
   subnet_id     = aws_subnet.public.id
 
+  iam_instance_profile = data.aws_iam_instance_profile.lab_role.name
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   metadata_options {
@@ -195,7 +208,7 @@ resource "aws_instance" "web" {
   user_data = <<-EOF
               #!/bin/bash
               dnf update -y
-              dnf install -y docker
+              dnf install -y docker certbot
               systemctl enable --now docker
               usermod -aG docker ec2-user
               sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) -o /usr/libexec/docker/cli-plugins/docker-compose
@@ -238,25 +251,31 @@ resource "aws_vpc_endpoint" "dynamodb" {
   }
 }
 
-resource "aws_vpc_endpoint_policy" "dynamodb_restrictive" {
-  vpc_endpoint_id = aws_vpc_endpoint.dynamodb.id
+resource "aws_dynamodb_resource_policy" "quotes_table_policy" {
+  resource_arn = aws_dynamodb_table.quote_table.arn
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AccessFromMainVpcOnly"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "dynamodb:*"
-        Resource  = [
-          aws_dynamodb_table.quote_table.arn,
-          "${aws_dynamodb_table.quote_table.arn}/*"
-        ]
-        Condition = {
-          StringEquals = {
-            "aws:sourceVpc" = aws_vpc.main.id
-          }
+        Sid    = "AllowOnlyLabRole"
+        Effect = "Allow"
+        Principal = {
+          AWS = data.aws_iam_role.lab_role.arn
         }
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:Query",
+          "dynamodb:Scan",
+          "dynamodb:DescribeTable"
+        ]
+        Resource = [
+          aws_dynamodb_table.quote_table.arn,
+          "${aws_dynamodb_table.quote_table.arn}/index/*"
+        ]
       }
     ]
   })

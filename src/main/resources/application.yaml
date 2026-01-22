@@ -7,3 +7,5 @@ aws:
     bucket-name: thb-cc-app-us-east-1
   dynamodb:
     table-name: quotes
+server:
+  port: 80
