@@ -3,7 +3,7 @@ import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'THB-CC: App',
+  title: 'thb-cc/app',
   tagline: 'A cloud computing development and operations project!',
   favicon: 'img/thb.ico',
   future: {
@@ -43,7 +43,7 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'THB-CC: App',
+      title: 'thb-cc/app',
       logo: {
         src: 'img/thb-banner.png',
       },

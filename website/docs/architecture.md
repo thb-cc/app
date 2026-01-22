@@ -1,14 +1,39 @@
 
-# architecture
+# Architecture
 
-- aws
-- vpc, ec2
-- terraform
+The build and deployment of `thb-cc/app` is handled by the [deploy](https://github.com/thb-cc/app/blob/main/.github/workflows/deploy.yaml) workflow using GitHub actions.
+
+The infrastructure is based on [Amazon AWS](https://aws.amazon.com/) and managed via [Terraform](https://developer.hashicorp.com/terraform) using our [main.tf](https://github.com/thb-cc/app/blob/main/main.tf) file.
+The Terraform state is maintained by manually/locally executing commands, since our AWS access is based on [AWS Academy](https://aws.amazon.com/training/awsacademy/) and thus the credentials change every lab session.
 
 ```mermaid
 graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+  repo["GitHub</br>thb-cc/app"]
+
+  subgraph aws["AWS VPC"]
+    s3["S3 Bucket + Endpoint"]
+    subgraph public["Public Subnet"]
+      subgraph ec2["EC2 Instance"]
+        subgraph docker["Docker"]
+          app["Application"]
+        end
+      end
+    end
+    subgraph private["Private Subnet"]
+      null["..."]
+    end
+    igw["Internet Gateway"]
+    igw --> public
+  end
+
+  dev["Developer"]
+  user["User"]
+
+  repo --Push Image--> dhub["DockerHub</br>fdalitz/app"]
+  repo --Terraform--> aws
+  repo --"Deploy via SSH to"--> ec2
+  app --Pull Image--> dhub
+  app --Object Storage--> s3
+  user --> igw
+  dev --> repo
 ```
