@@ -3,4 +3,4 @@ services:
     container_name: 'thb-cc-app'
     image: ${IMAGE}
     ports: [ '443:8443' ]
-    volumes: [ '/etc/letsencrypt/live/35.169.21.192.sslip.io:/app/certs:ro' ]
+    volumes: [ './certs/:/app/certs/:ro' ]
