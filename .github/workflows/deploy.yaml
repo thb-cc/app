@@ -37,22 +37,29 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: build and push image
-        id: push
+      - name: build image
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
+          load: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: run trivy scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           image-ref: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
           format: table
           exit-code: 1
           ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
+
+      - name: push image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
       - name: install cosign
         uses: sigstore/cosign-installer@v4.0.0
@@ -78,7 +85,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cosign verify ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} \
-              --certificate-identity "https://github.com/${{ github.repository }}/.github/workflows/deploy.yml@refs/heads/main" \
+              --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/deploy.yaml@.*" \
               --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
             cd ${{ env.WORKDIR }}
             echo "IMAGE=${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}" > .env
