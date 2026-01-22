@@ -38,7 +38,7 @@ public class QuoteService {
         }
 
         int index = random.nextInt(items.size());
-        return items.get(index).get("text").s();
+        return items.get(index).get("quote").s();
     }
 }
 
