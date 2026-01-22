@@ -2,4 +2,8 @@ services:
   thb-cc-app:
     container_name: 'thb-cc-app'
     image: ${IMAGE}
-    ports: ['8080:8080']
+    ports: ['443:443']
+    volumes: [
+      '/etc/letsencrypt/live/35.169.21.192.sslip.io/fullchain.pem:/app/fullchain.pem',
+      '/etc/letsencrypt/live/35.169.21.192.sslip.io/privkey.pem:/app/privkey.pem'
+    ]

@@ -1,6 +1,13 @@
 spring:
   application:
     name: app
+  ssl:
+    bundle:
+      pem:
+        lets-encrypt:
+          keystore:
+            certificate: 'file:./fullchain.pem'
+            private-key: 'file:./privkey.pem'
 aws:
   region: us-east-1
   s3:
@@ -8,4 +15,6 @@ aws:
   dynamodb:
     table-name: quotes
 server:
-  port: 80
+  port: 443
+  ssl:
+    bundle: 'lets-encrypt'
