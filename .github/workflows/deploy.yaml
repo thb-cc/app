@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WORKDIR: 'app'
-      IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/app
+      IMAGE_NAME: index.docker.io/${{ secrets.DOCKERHUB_USERNAME }}/app
       IMAGE_TAG: ${{ github.sha }}
     steps:
       - name: checkout code
@@ -85,12 +85,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -euo pipefail
-
-            echo "Current User: $(whoami)"
-            echo "Home Variable: $HOME"
-            ls -d $HOME/.sigstore || echo ".sigstore folder not found in $HOME"
-
-            export HOME=/home/${{ secrets.EC2_USER }}
 
             cosign verify ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} \
               --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/deploy.yaml@.*" \
