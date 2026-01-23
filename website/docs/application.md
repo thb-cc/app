@@ -4,6 +4,7 @@
 ## Purpose
 
 `thb-cc/app` is a simple joke application with the sole purpose of displaying random computer science memes on-demand.
+There is a central image that can be refreshed and below there is a text field showing a quote that can also be refreshed.
 
 ## Technical Details
 
