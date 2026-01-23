@@ -65,8 +65,11 @@ jobs:
         uses: sigstore/cosign-installer@v4.0.0
 
       - name: keyless cosign
+        env:
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASS }}
         run: |
-          cosign sign --yes ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
+          echo "${{ secrets.COSIGN_KEY }}" > cosign.key
+          cosign sign --key cosign.key --yes ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
 
       - name: copy compose file to ec2
         uses: appleboy/scp-action@v1.0.0
@@ -86,9 +89,8 @@ jobs:
           script: |
             set -euo pipefail
 
-            cosign verify ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} \
-              --certificate-identity-regexp "https://github.com/thb-cc/app/.github/workflows/deploy.yaml@.*" \
-              --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+            echo "${{ secrets.COSIGN_PUB }}" > cosign.pub
+            cosign verify --key cosign.pub ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}
 
             cd ${{ env.WORKDIR }}
             echo "IMAGE=${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}" > .env
