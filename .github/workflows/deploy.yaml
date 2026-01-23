@@ -90,6 +90,9 @@ jobs:
             export SIGSTORE_HOME=$HOME/.sigstore
             export PATH=$PATH:/usr/local/bin
 
+            cosign initialize
+            cosign version
+
             cosign verify ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} \
               --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/deploy.yaml@.*" \
               --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
