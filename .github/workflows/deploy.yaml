@@ -86,9 +86,15 @@ jobs:
           script: |
             set -euo pipefail
 
-            cosign verify ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} \
-              --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/deploy.yaml@.*" \
-              --certificate-oidc-issuer 'https://token.actions.githubusercontent.com'
+            for i in {1..5}; do
+              if cosign verify ${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }} \
+                  --certificate-identity-regexp "https://github.com/${{ github.repository }}/.github/workflows/deploy.yaml@.*" \
+                  --certificate-oidc-issuer 'https://token.actions.githubusercontent.com'; then
+                break
+              fi
+              echo "Verification failed, attempt $i/5. Waiting 5 seconds..."
+              sleep 5
+            done
 
             cd ${{ env.WORKDIR }}
             echo "IMAGE=${{ env.IMAGE_NAME }}@${{ steps.push.outputs.digest }}" > .env
