@@ -9,6 +9,7 @@ During the build process the application is tested via [unit and integration tes
 Images are then tested with [Trivy](https://github.com/aquasecurity/trivy) before being pushed to [DockerHub](https://hub.docker.com/).
 After pushing [Cosign](https://github.com/sigstore/cosign) is used to sign the images.
 The Cosign signature is verified when deploying and if this fails the deployment is stopped.
+To reduce the attack surface of our container it doesn't run as root but instead as user `spring` in the group `spring`.
 
 [SonarQube](https://www.sonarsource.com/products/sonarqube/) Cloud is used for an additional layer of static code analysis.
 Details about the current project status can be accessed through the [online dashboard](https://sonarcloud.io/project/overview?id=thb-cc_app).
