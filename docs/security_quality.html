@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.9.2">
 <title data-rh="true">Security &amp; Quality | thb-cc/app</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://thb-cc.github.io/app/docs/security_quality"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Security &amp; Quality | thb-cc/app"><meta data-rh="true" name="description" content="To improve the security of the application a CodeQL workflow is set up for automatic code analysis."><meta data-rh="true" property="og:description" content="To improve the security of the application a CodeQL workflow is set up for automatic code analysis."><link data-rh="true" rel="icon" href="/app/img/thb.ico"><link data-rh="true" rel="canonical" href="https://thb-cc.github.io/app/docs/security_quality"><link data-rh="true" rel="alternate" href="https://thb-cc.github.io/app/docs/security_quality" hreflang="en"><link data-rh="true" rel="alternate" href="https://thb-cc.github.io/app/docs/security_quality" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Security & Quality","item":"https://thb-cc.github.io/app/docs/security_quality"}]}</script><link rel="stylesheet" href="/app/assets/css/styles.606cb95e.css">
-<script src="/app/assets/js/runtime~main.e9a6e6a7.js" defer="defer"></script>
-<script src="/app/assets/js/main.811d7cda.js" defer="defer"></script>
+<script src="/app/assets/js/runtime~main.910a02b8.js" defer="defer"></script>
+<script src="/app/assets/js/main.7b4521e3.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
 <svg style="display: none;"><defs>
@@ -18,7 +18,8 @@ The workflow action used is <a href="https://github.com/github/codeql-action" ta
 <p>During the build process the application is tested via <a href="https://github.com/thb-cc/app/tree/main/src/test/java/com/thb/app" target="_blank" rel="noopener noreferrer" class="">unit and integration tests</a>.
 Images are then tested with <a href="https://github.com/aquasecurity/trivy" target="_blank" rel="noopener noreferrer" class="">Trivy</a> before being pushed to <a href="https://hub.docker.com/" target="_blank" rel="noopener noreferrer" class="">DockerHub</a>.
 After pushing <a href="https://github.com/sigstore/cosign" target="_blank" rel="noopener noreferrer" class="">Cosign</a> is used to sign the images.
-The Cosign signature is verified when deploying and if this fails the deployment is stopped.</p>
+The Cosign signature is verified when deploying and if this fails the deployment is stopped.
+To reduce the attack surface of our container it doesn&#x27;t run as root but instead as user <code>spring</code> in the group <code>spring</code>.</p>
 <p><a href="https://www.sonarsource.com/products/sonarqube/" target="_blank" rel="noopener noreferrer" class="">SonarQube</a> Cloud is used for an additional layer of static code analysis.
 Details about the current project status can be accessed through the <a href="https://sonarcloud.io/project/overview?id=thb-cc_app" target="_blank" rel="noopener noreferrer" class="">online dashboard</a>.</p>
 <p>For a simplified overview the <a href="https://github.com/thb-cc/app/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="">readme</a> contains three badges: for the statuses of the last deployment and CodeQL workflows and for the last SonarCloud quality gate scan.</p>
