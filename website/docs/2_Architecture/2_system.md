@@ -1,5 +1,5 @@
 
-# Architecture
+# System
 
 The build and deployment of `thb-cc/app` is handled by the [deploy](https://github.com/thb-cc/app/blob/main/.github/workflows/deploy.yaml) workflow using GitHub actions.
 
