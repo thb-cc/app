@@ -11,5 +11,5 @@ The following major steps are performed by the workflow:
 6. Transfer the most recent [compose file](https://github.com/thb-cc/app/blob/main/docker-compose.yaml) to the EC2 instance using SCP
 7. Deploy the new image to the EC2 instance via SSH by:
     1. Verifying the integrity of the image with Cosign
-    2. Saving the full image name in a `.env` file on-server
+    2. Saving the full image name in a `.env` file on-server in the working directory
     3. Performing a restart with `docker compose`
