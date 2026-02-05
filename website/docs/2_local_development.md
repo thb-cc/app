@@ -7,4 +7,4 @@ You need to have an AWS Account with a S3 bucket and DynamoDB table. Copy both n
 For testing purposes upload images from your machine or the internet to S3. Do the same with quotes in the DynamoDB table. 
 Set your AWS credentials in `~User/.aws/credentials`. 
 Start the application by running AppApplication using the profile `local`.
-A local Server starts and is available at http://localhost:8443/.
+A local Server starts and is available at http://localhost:8080/.
