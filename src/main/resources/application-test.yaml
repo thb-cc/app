@@ -1,3 +1,6 @@
 spring:
   application:
     name: app-test
+server:
+  ssl:
+    enabled: false

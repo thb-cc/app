@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestRestTemplate
+@ActiveProfiles("test")
 class S3WebIntegrationIT {
 
     /**

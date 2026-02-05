@@ -4,3 +4,4 @@ services:
     image: ${IMAGE}
     ports: [ '443:8443' ]
     volumes: [ './certs/:/app/certs/:ro' ]
+    restart: always

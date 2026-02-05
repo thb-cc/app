@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class S3Controller {
+public class AppController {
 
     private final S3Service s3Service;
     private final QuoteService quoteService;
 
 
-    public S3Controller(S3Service s3Service, QuoteService quoteService) {
+    public AppController(S3Service s3Service, QuoteService quoteService) {
         this.s3Service = s3Service;
         this.quoteService = quoteService;
     }

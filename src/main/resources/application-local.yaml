@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: app
+  ssl:
+    bundle:
+      pem:
+        lets-encrypt:
+          keystore:
+            certificate: ''
+            private-key: ''
+aws:
+  region: us-east-1
+  s3:
+    bucket-name: testcc-s3-bucket
+  dynamodb:
+    table-name: quotes-db-cc-test
+server:
+  ssl:
+    enabled: false
+  port: 8080
