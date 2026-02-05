@@ -18,7 +18,7 @@ flowchart TB
     subgraph App["Spring Boot Application"]
 
         %% Controller
-        AppController["AppController<br/>GET /<br/>GET /quote"]
+        AppController["AppController<br/>GET / (Thymeleaf)<br/>GET /quote"]
 
         %% Services
         S3Service["S3Service<br/>- list JPGs<br/>- count images<br/>- get random image"]
@@ -55,7 +55,7 @@ flowchart TB
     %% =====================
     %% Cross-System Connections
     %% =====================
-    Browser -->|HTTP / HTML| AppController
+    Browser <--HTTPS--> AppController
 
     S3Client --> S3Bucket
     DynamoDBClient --> DynamoTable
